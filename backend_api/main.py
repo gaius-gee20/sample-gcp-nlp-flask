@@ -88,7 +88,7 @@ class Text(Resource):
         text = args["text"]
 
         # Get the sentiment score of the first sentence of the analysis (that's the [0] part)
-        sentiment = analyze_text_sentiment(text)[0].get("sentiment score")
+	# sentiment = analyze_text_sentiment(text)[0].get("sentiment score")
 
 	# gaius
 	sentiment = sum[x.get("sentiment score") for x in analyze_text_sentiment(text) ]
