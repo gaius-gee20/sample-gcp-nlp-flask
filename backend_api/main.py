@@ -151,6 +151,9 @@ def analyze_text_sentiment(text):
     https://cloud.google.com/natural-language/docs/analyzing-sentiment
     It makes a call to the Google NLP API to retrieve sentiment analysis.
     """
+    # gaius - truncate to 1500 bytes - assuming all relevant sentiment is near start
+    text = text[:1499]
+
     client = language.LanguageServiceClient()
     document = language.Document(content=text, type_=language.Document.Type.PLAIN_TEXT)
 
