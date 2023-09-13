@@ -6,6 +6,9 @@ from google.cloud import datastore
 from google.cloud import language_v1 as language
 import os
 
+# gaius
+from statistics import mean
+
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"
 
 """
@@ -86,6 +89,9 @@ class Text(Resource):
 
         # Get the sentiment score of the first sentence of the analysis (that's the [0] part)
         sentiment = analyze_text_sentiment(text)[0].get("sentiment score")
+
+	# gaius
+	sentiment = sum[x.get("sentiment score") for x in analyze_text_sentiment(text) ]
 
         # Assign a label based on the score
         overall_sentiment = "unknown"
