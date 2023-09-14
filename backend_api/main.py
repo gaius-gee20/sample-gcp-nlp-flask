@@ -63,13 +63,13 @@ class Text(Resource):
 
         # Get the datastore 'kind' which are 'Sentences'
         query = datastore_client.query(kind="Sentences")
-        text_entities = list(query.fetch())
+        text_entities = [ x[:1000] for x in list(query.fetch()) ]
 
         # Parse the data into a dictionary format
         result = {}
         for text_entity in text_entities:
             result[str(text_entity.id)] = {
-                "text": str(text_entity["text"]),
+                "text": str(text_entity["text"])[:1000], # gaius truncate here too
                 "timestamp": str(text_entity["timestamp"]),
                 "sentiment": str(text_entity["sentiment"]),
             }
@@ -85,7 +85,7 @@ class Text(Resource):
         datastore_client = datastore.Client()
 
         args = parser.parse_args()
-        text = args["text"]
+        text = args["text"][:1000]
 
         # Get the sentiment score of the first sentence of the analysis (that's the [0] part)
         # sentiment = analyze_text_sentiment(text)[0].get("sentiment score")
@@ -118,6 +118,7 @@ class Text(Resource):
         entity["text"] = text
         entity["timestamp"] = current_datetime
         entity["sentiment"] = overall_sentiment
+        entity["sentiment_score"] = sentiment
 
         # Save the new entity to Datastore.
         datastore_client.put(entity)
@@ -127,6 +128,7 @@ class Text(Resource):
             "text": text,
             "timestamp": str(current_datetime),
             "sentiment": overall_sentiment,
+            "sentiment_score": sentiment
         }
         return result
 
@@ -152,7 +154,7 @@ def analyze_text_sentiment(text):
     It makes a call to the Google NLP API to retrieve sentiment analysis.
     """
     # gaius - truncate to 1500 bytes - assuming all relevant sentiment is near start
-    text = text[:1499]
+    text = text[:1000]
 
     client = language.LanguageServiceClient()
     document = language.Document(content=text, type_=language.Document.Type.PLAIN_TEXT)
